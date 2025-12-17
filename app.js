@@ -9,6 +9,8 @@ app.use((req, res, next) => {
   next();
 });
 
+//app.use(express.static(`${__dirname}/public`));
+
 app.get("/", (req, res) => {
   res.status(200).json({ message: "Hello from the server side . " });
 });
@@ -19,7 +21,4 @@ const userRouter = require("./routes/userRoutes");
 app.use("/api/v1/tours", tourRouter);
 app.use("/api/v1/users", userRouter);
 
-const PORT = 3000;
-app.listen(PORT, () => {
-  console.log(`App running on port : ${PORT} number :) `);
-});
+module.exports = app;
