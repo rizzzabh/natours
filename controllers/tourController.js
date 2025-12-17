@@ -16,17 +16,44 @@ const Tour = require(`${__dirname}/../models/tourModel.js`);
 //   }
 // };
 
-exports.getAllTours = (req, res) => {
-  res.status(200).send({
-    status: "success",
-    tour: data,
-  });
+exports.getAllTours = async (req, res) => {
+  try {
+    const tours = await Tour.find();
+    res.status(200).json({
+      status: "success",
+      data: {
+        tour: tours,
+      },
+    });
+  } catch (error) {
+    res.status(400).json({ message: error });
+  }
 };
 
-exports.getTour = (req, res) => {};
+exports.getTour = async (req, res) => {
+  try {
+    const currentTour = await Tour.findById(req.params.id);
 
-exports.addTour = (req, res) => {
-  const data = req.body;
-  console.log(data);
-  res.send("done");
+    res.status(200).json({
+      status: "success",
+      data: {
+        tour: currentTour,
+      },
+    });
+  } catch (error) {}
+};
+
+exports.addTour = async (req, res) => {
+  try {
+    const newTour = await Tour.create(req.body);
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        tour: newTour,
+      },
+    });
+  } catch (error) {
+    res.status(400).json({ status: "failed to add tour ", message: error });
+  }
 };
