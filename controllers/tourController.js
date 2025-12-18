@@ -16,14 +16,33 @@ const Tour = require(`${__dirname}/../models/tourModel.js`);
 //   }
 // };
 
+exports.aliasTopTours = async (req, res, next) => {
+  req.query.sort = "-ratingsAverage";
+
+  next();
+};
+
 exports.getAllTours = async (req, res) => {
   try {
     const queryObject = req.query;
     const excludedFields = ["sort", "page", "limit", "fields"];
     excludedFields.forEach((el) => delete queryObject[el]);
 
-    const query = Tour.find(queryObject);
+    let query = Tour.find(queryObject);
 
+    if (req.query.sort) {
+      query = query.sort(req.query.sort);
+    }
+
+    if (req.query.fields) {
+      const fields = req.query.fields.split(",").join(" ");
+      query = query.select(fields);
+    }
+
+    //pagination
+    const page = req.query.page * 1 || 1;
+    const limit = req.query.limit * 1 || 100;
+    query.skip((page - 1) * limit).limit(limit);
     const tours = await query;
     res.status(200).json({
       status: "success",
