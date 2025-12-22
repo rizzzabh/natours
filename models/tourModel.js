@@ -5,7 +5,7 @@ const TourSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: true,
+      required: [true, "a tour must have a name"],
       unique: true,
     },
     slug: {
@@ -17,7 +17,12 @@ const TourSchema = new mongoose.Schema(
     },
     ratingsAverage: Number,
     ratingsQuantity: Number,
-    priceDiscount: Number,
+    priceDiscount: {
+      type: Number,
+      validate: function (val) {
+        return val <= this.price;
+      },
+    },
     summary: String,
     maxGroupSize: {
       type: Number,
@@ -51,6 +56,11 @@ TourSchema.pre("save", function (next) {
 });
 
 /// TourSchema.post("save" , function(doc , next)){}
+
+// Query Middleware ;
+// TourSchem.pre("find" , function (next)) {}
+
+// TourSchema.pre("aggregate" , function ()) {}
 
 const Tour = mongoose.model("Tour", TourSchema);
 
