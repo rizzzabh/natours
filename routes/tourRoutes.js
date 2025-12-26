@@ -9,7 +9,11 @@ router
 
 router
   .route("/")
-  .get(authController.protect, tourController.getAllTours)
+  .get(
+    authController.protect,
+    authController.restrictTo(["admin"]),
+    tourController.getAllTours
+  )
   .post(tourController.addTour);
 router.route("/tour-stats").get(tourController.getTourStats);
 router.route("/monthly-plan/:year").get(tourController.getMonthlyPlan);
