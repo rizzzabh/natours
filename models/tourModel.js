@@ -37,6 +37,16 @@ const TourSchema = new mongoose.Schema(
       type: String,
     },
     images: [String],
+    startLocation: {
+      type: {
+        type: String,
+        default: "Point",
+        enum: ["Point"],
+      },
+      coordinates: [Number],
+      address: String,
+      description: String,
+    },
   },
   {
     toJSON: { virtuals: true },
